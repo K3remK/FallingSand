@@ -1,0 +1,6 @@
+﻿  main.cpp
+C:\dev\Graphics\game-premake\game\src\main.cpp(85,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\dev\Graphics\game-premake\game\src\main.cpp(86,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\dev\Graphics\game-premake\game\src\main.cpp(114,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\dev\Graphics\game-premake\game\src\main.cpp(168,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  game-premake.vcxproj -> C:\dev\Graphics\game-premake\bin\Debug\game-premake.exe
