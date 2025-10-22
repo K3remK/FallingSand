@@ -1,0 +1,8 @@
+﻿  main.cpp
+C:\dev\Graphics\FallingSand\game\src\main.cpp(94,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\dev\Graphics\FallingSand\game\src\main.cpp(95,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\dev\Graphics\FallingSand\game\src\main.cpp(139,55): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\dev\Graphics\FallingSand\game\src\main.cpp(139,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\dev\Graphics\FallingSand\game\src\main.cpp(130,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+C:\dev\Graphics\FallingSand\game\src\main.cpp(214,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  FallingSand.vcxproj -> C:\dev\Graphics\FallingSand\game\bin\Debug-windows-x86_64\FallingSand\FallingSand.exe

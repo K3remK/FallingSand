@@ -77,6 +77,23 @@ function check_raylib()
     end
 end
 
+function check_imgui()
+    if(os.isdir("imgui-master") == false and os.isdir("imgui") == false) then
+        if(not os.isfile("imgui-master.zip")) then
+            print("ImGui not found, downloading from github")
+            local result_str, response_code = http.download("https://github.com/K3remK/imgui/archive/refs/heads/master.zip", "imgui-master.zip", {
+                progress = download_progress,
+                headers = { "From: Premake", "Referer: Premake" }
+            })
+        end
+        print("Unzipping to " .. os.getcwd())
+        zip.extract("imgui-master.zip", os.getcwd())
+        os.remove("imgui-master.zip")
+    end
+end
+
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
 function use_library(libraryName, githubFolder, repoHead)
     libFolder = libraryName .. "-" .. repoHead
     zipFile = libFolder .. ".zip"
@@ -109,7 +126,8 @@ function use_library(libraryName, githubFolder, repoHead)
     project (libraryName)
         kind "StaticLib"
         location "./"
-        targetdir "../bin/%{cfg.buildcfg}"
+        targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
         filter "action:vs*"
             buildoptions { "/experimental:c11atomics" }
@@ -162,7 +180,8 @@ workspace (workspaceName)
 
     filter {}
 
-    targetdir "bin/%{cfg.buildcfg}/"
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
     if(os.isdir("game")) then
         startproject(workspaceName)
@@ -171,8 +190,11 @@ workspace (workspaceName)
 cdialect "C17"
 cppdialect "C++17"
 check_raylib();
+check_imgui();
 
 include ("raylib_premake5.lua")
+include ("rlImGui")
+include ("")
 
 if(os.isdir("game")) then
     include ("game")

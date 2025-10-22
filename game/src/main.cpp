@@ -19,15 +19,20 @@
 *
 ********************************************************************************************/
 
+#include "imgui.h"
+#include "rlImGui.h"
+#include "imgui_impl_raylib.h"
 #include "raylib.h"
 #include <iostream>
+
+
 
 //----------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
 const int screenWidth = 800;
 const int screenHeight = 600;
-const int cellWidth = 1;                       // length of each partical in a square shape
+static int cellWidth = 1;                       // length of each partical in a square shape
 #define ROWS screenHeight / cellWidth          // number of rows
 #define COLS screenWidth / cellWidth           // number of columns
 int** grid = nullptr;                          // dynamic array representing the particals
@@ -42,40 +47,44 @@ static void UpdateGrid(int** grid);             // update the pyhsics of the par
 int** initGrid(int rows, int cols);             // initialize an empty grid
 int hue = 1;                                    // color value of each partical in hsv
 
-//----------------------------------------------------------------------------------
-// Main entry point
-//----------------------------------------------------------------------------------
-int main(void)
+
+// Init imgui
+void InitImGUI()
 {
-	// Initialization
-	//--------------------------------------------------------------------------------------
-	grid = initGrid(ROWS, COLS);
-	InitWindow(screenWidth, screenHeight, "raylib");
-
-	//--------------------------------------------------------------------------------------
-	SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-	//--------------------------------------------------------------------------------------
-
-	// Main game loop
-	while (!WindowShouldClose())    // Detect window close button or ESC key
-	{
-		UpdateDrawFrame();
-	}
-
-
-	// De-Initialization
-	//--------------------------------------------------------------------------------------
-	CloseWindow();                  // Close window and OpenGL context
-	//--------------------------------------------------------------------------------------
-
-	return 0;
+	rlImGuiSetup(true);
 }
 
-// Update and draw game frame
-static void UpdateDrawFrame(void)
+void BeginImGui()
 {
-	// Update
-	//----------------------------------------------------------------------------------
+}
+
+void EndImGui()
+{
+}
+
+void GameInit()
+{
+	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
+	InitWindow(screenWidth, screenHeight, "Example");
+	SetTargetFPS(144);
+
+	// load resources
+	// Initialization
+	//--------------------------------------------------------------------------------------
+
+	InitImGUI();
+	
+	grid = initGrid(ROWS, COLS);
+}
+
+void GameCleanup()
+{
+	rlImGuiShutdown();
+	CloseWindow();
+}
+
+bool GameUpdate()
+{
 	UpdateGrid(grid);
 	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
 		Vector2 mousePos = GetMousePosition();
@@ -103,12 +112,19 @@ static void UpdateDrawFrame(void)
 		numOfParticals = 0;
 	}
 	//----------------------------------------------------------------------------------
+	return true;
+}
+
+void GameDraw()
+{
+
+	//----------------------------------------------------------------------------------
 
 	// Draw
 	//----------------------------------------------------------------------------------
 	BeginDrawing();
-
 	ClearBackground({ 0, 0, 0, 1 });
+	
 	DrawGrid(grid);
 	char numParticals[10];
 	itoa(numOfParticals, numParticals, 10);
@@ -116,9 +132,39 @@ static void UpdateDrawFrame(void)
 	DrawText("(R for reset!)", 10, 50, 20, { 255, 255, 255, 255 });
 	DrawFPS(10, 30);
 
+	// ImGui Draw
+	//----------------------------------------------------------------------------------
+	rlImGuiBegin();
+	ImGui::Begin("settings");
+	ImGui::DragInt("cell width", &cellWidth, 1.0f, 1.0f, 10.0f, "Cell Width: %d");
+	ImGui::End();
+	rlImGuiEnd();
+
+
 	EndDrawing();
 	//----------------------------------------------------------------------------------
 }
+//----------------------------------------------------------------------------------
+// Main entry point
+//----------------------------------------------------------------------------------
+int main(void)
+{
+	GameInit();
+
+	while (!WindowShouldClose())
+	{
+		if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+		{
+			if (!GameUpdate())
+				break;
+		}
+		GameDraw();
+	}
+	GameCleanup();
+
+	return 0;
+}
+
 //TODO: instead of checking for every cell, keep track of each movind partical position on the grid
 //TODO: maybe add the gravitational acceleration to the particals
 //----------------------------------------------------------------------------------

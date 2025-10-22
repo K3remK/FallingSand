@@ -16,11 +16,11 @@
 --  3. This notice may not be removed or altered from any source distribution.
 
 baseName = path.getbasename(os.getcwd());
-
 project (workspaceName)
     kind "ConsoleApp"
     location "./"
-    targetdir "../bin/%{cfg.buildcfg}"
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
     filter "action:vs*"
         debugdir "$(SolutionDir)"
@@ -53,7 +53,12 @@ project (workspaceName)
     includedirs { "./" }
     includedirs { "src" }
     includedirs { "include" }
+    includedirs { "../rlImGui" }
+    includedirs { "../imgui-master" }
+
     
     link_raylib()
     link_to("staticLib")
+    links ("rlImGui")
+    links ("ImGui")
 -- To link to a lib use link_to("LIB_FOLDER_NAME")
