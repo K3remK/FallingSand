@@ -1,8 +1,10 @@
 raylib-master
+imgui-master
 _build
 _bin
 .vs
 /bin
+/bin-int
 /build
 Makefile
 obj
